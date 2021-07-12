@@ -167,7 +167,7 @@ function tickOnMouseLeave(_event) {
 //const tickLines = d3.selectAll("text");
 const tickLines = d3.selectAll(".tick");
 tickLines
-  .on("mouseenter", tickOnMouseEnter)
+  .on("click", tickOnMouseEnter)
   .on("mouseleave", tickOnMouseLeave);
 
 // With `<body onload='display_time();'>` we don't need this call.
