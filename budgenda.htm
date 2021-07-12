@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <style>
+        .clock {margin: auto;}
+        #the_clock {
+            font-size: 100px;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+        }
+        svg {
+            margin: 50px;
+        }
+        #notes {
+            margin: 50px;
+            padding: 2px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+        }
+        ul {
+            padding: 5px;
+        }
+        li {
+            list-style: none;
+            margin: 2px;
+            padding: 2px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+        }
+        li:nth-child(even) {
+            background-color: lightgrey;
+        }
+        </style>
+    </head>
+    <body onload='display_time();'>
+        <script src="js/d3.v6.min.js"></script>
+        <div class="clock">
+            <span id="the_clock"></span>
+        </div>
+        <script src="js/moving_tick.js"></script>
+        <div id="notes">
+            <ul></ul>
+        </div>
+    </body>
+</html>
