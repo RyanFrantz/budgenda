@@ -164,14 +164,20 @@ function renderNotes() {
     return a.id - b.id;
   });
 
+  // Since this is a contenteditable element (see createNote())
+  // we add the note's date to it, then the note content as a
+  // child div element.
+  // NOTE: We don't have note content yet, so insert a break.
   d3.select("#notes").selectAll(".note")
     .data(allNotes)
-    // Use .join here instead of text?
+    .join("div")
     .text((datum, idx) => {
-      //let note = `<div>Date: ${datum.id}<br></div><div>${datum.text}</div>`;
       let note = `Date: ${datum.id}`;
       return note;
-    });
+    })
+    .append("div")
+    .join("div")
+    .append("br");
 }
 
 // Create a new note element.
