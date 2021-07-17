@@ -16,6 +16,7 @@ const width = 1200 - margin.left - margin.right,
 
 // TODO: Learn more about this.
 const svg = d3.select("body").append("svg")
+              .attr("class", "timeline")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
               .append("g")
@@ -156,12 +157,23 @@ function display_time() {
     refresh_time();
 }
 
-// Select our notes element, for use later.
-//const notes = d3.select("#notes");
-
 let allNotes = [];
+
+function renderNotes() {
+  allNotes.sort((a,b) => {
+    return a.id - b.id;
+  });
+
+  d3.select("#notes").selectAll("textarea")
+    .data(allNotes)
+    .text((datum, idx) => {
+      let note = `Date: ${datum.id}\n${datum.text}`;
+      //return `${JSON.stringify(datum)}`;
+      return note;
+    });
+}
+
 // Display a tick's text value as a note.
-// Receives a MouseEvent.
 function tickOnClick(_event, datum) {
   if (! allNotes.find(n => n.id == datum)) {
     // Add another list element.
@@ -172,20 +184,25 @@ function tickOnClick(_event, datum) {
   // TODO: Auto-save content in textareas.
   console.log(JSON.stringify(allNotes));
 
-  allNotes.sort((a,b) => {
-    return a.id - b.id;
-  });
+  renderNotes();
 
-  d3.select("#notes").selectAll("textarea")
-    .data(allNotes)
-    .text((datum, index) => {return `${index}: ${JSON.stringify(datum)}`;});
+  // We have a click event registered on a parent that we don't
+  // want to fire.
+  _event.stopPropagation();
 }
 
 // Select all tick text elements and bind events to them.
-//const tickLines = d3.selectAll("text");
-const tickLines = d3.selectAll(".tick");
-tickLines
-  .on("click", tickOnClick);
+d3.selectAll(".tick").on("click", tickOnClick);
+
+function timelineOnClick(_event, datum) {
+  // We don't have a datum at this part of the DOM.
+  d3.select("#notes").select("ul").append("li").append("textarea");
+   // Add a "note" to our list of notes.
+  allNotes.push({id: new Date(), text: 'note'});
+  renderNotes();
+}
+
+d3.selectAll(".timeline").on("click", timelineOnClick);
 
 // With `<body onload='display_time();'>` we don't need this call.
 // Without that onload tag, this call will be made when the JS file is
