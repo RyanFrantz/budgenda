@@ -182,9 +182,11 @@ function renderNotes() {
 
 // Create a new note element.
 function createNote() {
-  d3.select("#notes").select("ul").append("li").append("div")
+  let newNote = d3.select("#notes").select("ul").append("li").append("div")
     .attr("class", "note")
     .attr("contenteditable", true);
+  // Focus on the newly created note.
+  newNote.node().focus();
 }
 
 // Display a tick's text value as a note.
