@@ -38,12 +38,13 @@ let xAxisGenerator = d3.axisBottom(xScale);
 // Start and end on a nice boundary.
 // For a 30-minute session, starts and ends 1-6 minutes on each side.
 xAxisGenerator.ticks(duration);
+let timeFormat = d3.timeFormat("%H:%M"); // 24-hour format.
+xAxisGenerator.tickFormat(timeFormat);
 xScale.nice();
 
 
 // Render the axis.
-let xAxis = svg.append("g")
-              .call(xAxisGenerator);
+let xAxis = svg.append("g").call(xAxisGenerator);
 
 // Customizations using the axis after it is called
 // Place the axis at the bottom of the graph.
@@ -161,54 +162,30 @@ function display_time() {
 let allNotes = [];
 // Display a tick's text value as a note.
 // Receives a MouseEvent.
-function tickOnMouseEnter(_event, datum) {
+function tickOnClick(_event, datum) {
   if (! allNotes.find(n => n.id == datum)) {
     // Add another list element.
-    d3.select("#notes").select("ul").append("li");
+    d3.select("#notes").select("ul").append("li").append("textarea");
     // Add a "note" to our list of notes.
     allNotes.push({id: datum, text: 'note'});
   }
+  // TODO: Auto-save content in textareas.
   console.log(JSON.stringify(allNotes));
-  //console.log(_event);
-  // datum should be the same as the tick node's text.
-  console.log(`Tick value: ${datum}`);
-  let [x, y] = d3.pointer(_event);
-  console.log(JSON.stringify(_event.currentTarget));
-  console.log(`x: ${x} y: ${y}`);
-  //let value = _event.toElement.textContent;
-  // NOTE: I think _event.pageX and _event.pageY would provide coords for the event.
 
-  // In this context 'this' is the text element.
-  // Because HTML elements that receive events have `this` bound to them?
-  // Yes. `this` refers to the HTML node that received an event.
-  let _node = d3.select(this);
-  console.log(_node);
-  console.log(_node.text());
-  console.log(_node.attr("transform").translate);
-  //let notes = d3.select("#notes");
-  //notes.style("opacity", 1).text(_node.text());
-  //notes.style("opacity", 1)...
   allNotes.sort((a,b) => {
-    console.log(`${a.id} - ${b.id}?`);
     return a.id - b.id;
   });
-  d3.select("#notes").selectAll("li")
+
+  d3.select("#notes").selectAll("textarea")
     .data(allNotes)
     .text((datum, index) => {return `${index}: ${JSON.stringify(datum)}`;});
-}
-
-// Make the notes go away.
-function tickOnMouseLeave(_event) {
-  //notes.style("opacity", 0)
-  console.log('tick mouseleave');
 }
 
 // Select all tick text elements and bind events to them.
 //const tickLines = d3.selectAll("text");
 const tickLines = d3.selectAll(".tick");
 tickLines
-  .on("click", tickOnMouseEnter)
-  .on("mouseleave", tickOnMouseLeave);
+  .on("click", tickOnClick);
 
 // With `<body onload='display_time();'>` we don't need this call.
 // Without that onload tag, this call will be made when the JS file is
