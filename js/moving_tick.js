@@ -5,7 +5,7 @@
 //
 
 // Margin convention
-const margin = {top: 20, right: 20, bottom: 20, left: 10};
+const margin = {top: 32, right: 20, bottom: 32, left: 10};
 /*
 const width = 1200 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
@@ -23,10 +23,11 @@ const svg = d3.select("body").append("svg")
 
 
 // Define the scale for our axis.
-//const min_data = 0, max_data = 10000;
-const min_data = 0, max_data = 59;
-let xScale = d3.scaleLinear()
-               .domain([min_data, max_data])
+let duration = 30;
+let start = Date.now() - (60 * 2 * 1000);
+let end = Date.now() + (60 * duration * 1000);
+let xScale = d3.scaleTime()
+               .domain([start, end])
                .range([0, width]);
 
 // NOTE: axisBottom() doesn't place the axis at the bottom of a graph.
@@ -34,8 +35,10 @@ let xScale = d3.scaleLinear()
 let xAxisGenerator = d3.axisBottom(xScale);
 
 // Customizations using the axis generator; these are done pre-render.
-//xAxisGenerator.ticks(3);
-xAxisGenerator.ticks(max_data);
+// Start and end on a nice boundary.
+// For a 30-minute session, starts and ends 1-6 minutes on each side.
+xAxisGenerator.ticks(duration);
+xScale.nice();
 
 
 // Render the axis.
@@ -46,6 +49,41 @@ let xAxis = svg.append("g")
 // Place the axis at the bottom of the graph.
 xAxis.attr("transform",`translate(${0},${height})`);
 
+// Optional: Remove text from alternate ticks, for legibility.
+// https://stackoverflow.com/questions/38921226/show-every-other-tick-label-on-d3-time-axis
+/*
+let ticks = d3.selectAll(".tick text");
+ticks.each(function(_,i){
+  if(i%2 !== 0) d3.select(this).remove();
+});
+*/
+
+// Elongate alternate ticks, for legibility.
+d3.selectAll(".tick line")
+.each(function(datum, idx){
+  if(idx % 2 !== 0) d3.select(this)
+    .attr("y2", "16");
+});
+/*
+ * - or -
+ *
+d3.selectAll(".tick line")
+  .attr("y2", function(datum, idx) {
+    if(idx % 2 !== 0) {
+      return "16";
+    } else {
+      return "6";
+    }
+  });
+*/
+
+// We also need to push the placement of text to be under the tick line.
+let _text = d3.selectAll(".tick text");
+_text.each(function(_,i){
+  if(i%2 !== 0) d3.select(this)
+    .attr("y", "16");
+});
+
 // Refresh it
 function refreshTicks() {
   let interval = 1000;
@@ -53,6 +91,7 @@ function refreshTicks() {
 }
 
 // Restore all ticks to their original styling.
+/*
 function restoreTicks() {
   d3.selectAll("text")
   .attr("font-size", "10")
@@ -63,6 +102,7 @@ function restoreTicks() {
   .attr("stroke-width", "1")
   .attr("y2", "6");
 }
+*/
 
 function getSeconds() {
   let today = new Date();
@@ -72,7 +112,7 @@ function getSeconds() {
 // We can use this to  modify the tick whose text value matches the seconds!
 // TODO: Rename function to clarify it updates the tick whose second is displayed.
 function updateTick() {
-  restoreTicks();
+  //restoreTicks();
   let seconds = getSeconds();
 
   // Select all tick elements, filtering on the one that matches the seconds
@@ -111,7 +151,7 @@ function display_time() {
     var second   = prefix_zero(today.getSeconds());
     var the_time = `${hour}:${minute}:${second}`;
     document.getElementById('the_clock').innerHTML = the_time;
-    updateTick();
+    //updateTick(); // TODO: Fix this; move to minute-ly.
     refresh_time();
 }
 
