@@ -164,20 +164,28 @@ function renderNotes() {
     return a.id - b.id;
   });
 
-  d3.select("#notes").selectAll("textarea")
+  d3.select("#notes").selectAll(".note")
     .data(allNotes)
+    // Use .join here instead of text?
     .text((datum, idx) => {
-      let note = `Date: ${datum.id}\n${datum.text}`;
-      //return `${JSON.stringify(datum)}`;
+      //let note = `<div>Date: ${datum.id}<br></div><div>${datum.text}</div>`;
+      let note = `Date: ${datum.id}`;
       return note;
     });
+}
+
+// Create a new note element.
+function createNote() {
+  d3.select("#notes").select("ul").append("li").append("div")
+    .attr("class", "note")
+    .attr("contenteditable", true);
 }
 
 // Display a tick's text value as a note.
 function tickOnClick(_event, datum) {
   if (! allNotes.find(n => n.id == datum)) {
     // Add another list element.
-    d3.select("#notes").select("ul").append("li").append("textarea");
+    createNote();
     // Add a "note" to our list of notes.
     allNotes.push({id: datum, text: 'note'});
   }
@@ -195,9 +203,8 @@ function tickOnClick(_event, datum) {
 d3.selectAll(".tick").on("click", tickOnClick);
 
 function timelineOnClick(_event, datum) {
+  createNote();
   // We don't have a datum at this part of the DOM.
-  d3.select("#notes").select("ul").append("li").append("textarea");
-   // Add a "note" to our list of notes.
   allNotes.push({id: new Date(), text: 'note'});
   renderNotes();
 }
