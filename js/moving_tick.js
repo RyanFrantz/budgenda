@@ -180,10 +180,22 @@ function renderNotes() {
     .append("br");
 }
 
+/*
+ *  Given a date, return milliseconds since the epoch.
+ * Sat Jul 17 2021 16:57:34 GMT-0400 (Eastern Daylight Time)
+ * -to-
+ *  1626555454000
+ */
+function epoch(date) {
+  return Date.parse(date);
+}
+
 // Create a new note element.
-function createNote() {
+// Define an id value to aid in storing and sorting notes.
+function createNote(date) {
   let newNote = d3.select("#notes").select("ul").append("li").append("div")
     .attr("class", "note")
+    .attr("id", `note_${epoch(date)}`)
     .attr("contenteditable", true);
   // Focus on the newly created note.
   newNote.node().focus();
@@ -193,7 +205,7 @@ function createNote() {
 function tickOnClick(_event, datum) {
   if (! allNotes.find(n => n.id == datum)) {
     // Add another list element.
-    createNote();
+    createNote(datum);
     // Add a "note" to our list of notes.
     allNotes.push({id: datum, text: 'note'});
   }
@@ -211,9 +223,10 @@ function tickOnClick(_event, datum) {
 d3.selectAll(".tick").on("click", tickOnClick);
 
 function timelineOnClick(_event, datum) {
-  createNote();
+  let date = new Date();
+  createNote(date);
   // We don't have a datum at this part of the DOM.
-  allNotes.push({id: new Date(), text: 'note'});
+  allNotes.push({id: date, text: 'note'});
   renderNotes();
 }
 
