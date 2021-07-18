@@ -139,14 +139,14 @@ function prefix_zero(num) {
     return num < 10 ? `0${num}` : num;
 }
 
-// This is one half of a main loop between this function and display_time().
+// This is one half of a main loop between this function and displayTime().
 function refresh_time() {
     var interval = 1000; // Milliseconds.
-    setTimeout('display_time()', interval)
+    setTimeout('displayTime()', interval)
 }
 
 // Entry point for our program.
-function display_time() {
+function displayTime() {
     var today    = new Date();
     var hour     = prefix_zero(today.getHours());
     var minute   = prefix_zero(today.getMinutes());
