@@ -193,6 +193,17 @@ function epoch(date) {
 // Create a new note element.
 // Define an id value to aid in storing and sorting notes.
 function createNote(date) {
+  let notes = d3.select("#notes").selectAll(".note").nodes();
+  // maybe use selectChildren("div") to get all the notes lines.
+  for (let n of notes) {
+    let children = d3.select(n).selectChildren("div");
+    //console.log(children);
+    for (let c of children) {
+      // this works well.
+      console.log(d3.select(c).text());
+    }
+    //console.log(`NOTE: ${JSON.stringify(n)}`);
+  }
   let newNote = d3.select("#notes").select("ul").append("li").append("div")
     .attr("class", "note")
     .attr("id", `note_${epoch(date)}`)
@@ -210,7 +221,7 @@ function tickOnClick(_event, datum) {
     allNotes.push({id: datum, text: 'note'});
   }
   // TODO: Auto-save content in textareas.
-  console.log(JSON.stringify(allNotes));
+  //console.log(JSON.stringify(allNotes));
 
   renderNotes();
 

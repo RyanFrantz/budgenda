@@ -1,0 +1,48 @@
+.clock {
+    margin: auto;
+}
+#the_clock {
+    font-size: 50px;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+}
+svg {
+    border: 1px solid;
+    border-radius: 5px;
+    margin: 10px 50px;
+    padding: 10px;
+}
+#notes {
+    width: 1200px;
+    margin: 10px 50px;
+    padding: 2px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}
+ul {
+    padding: 5px;
+}
+li {
+    list-style: none;
+    margin-right: 5px;
+}
+li:nth-child(even) {
+    margin-left: 10px;
+}
+.timeline,
+.tick {
+    cursor: pointer;
+}
+.note {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 2px;
+    padding: 2px;
+    width: 100%;
+}
+text:hover {
+    fill: red;
+}
