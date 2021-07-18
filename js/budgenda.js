@@ -204,11 +204,16 @@ function createNote(date) {
     }
     //console.log(`NOTE: ${JSON.stringify(n)}`);
   }
-  let newNote = d3.select("#notes").select("ul").append("li").append("div")
+  // FIXME: This doesn't work quite right. It always focuses on the very last
+  // note, regardless of the order in which the notes are created.
+  let noteId = `note_${epoch(date)}`;
+  d3.select("#notes").select("ul").append("li").append("div")
     .attr("class", "note")
-    .attr("id", `note_${epoch(date)}`)
+    .attr("id", `${noteId}`)
     .attr("contenteditable", true);
   // Focus on the newly created note.
+  let newNote = d3.select(`#${noteId}`);
+  console.log(newNote.node());
   newNote.node().focus();
 }
 
