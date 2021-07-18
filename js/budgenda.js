@@ -248,7 +248,3 @@ function timelineOnClick(_event, datum) {
 
 d3.selectAll(".timeline").on("click", timelineOnClick);
 
-// With `<body onload='display_time();'>` we don't need this call.
-// Without that onload tag, this call will be made when the JS file is
-// loaded. Having both seems harmless.
-display_time();
