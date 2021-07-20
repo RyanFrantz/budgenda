@@ -168,16 +168,29 @@ function renderNotes() {
   // we add the note's date to it, then the note content as a
   // child div element.
   // NOTE: We don't have note content yet, so insert a break.
+  /*
   d3.select("#notes").selectAll(".note")
     .data(allNotes)
-    .join("div")
+    .join("div") // <div class="note"...
     .text((datum, idx) => {
+      // This creates a bug because the text NEEDS to be in DIVs to be
+      // found later by storeNoteState().
+      console.log(`RENDER NOTES: ${datum.id} => ${JSON.stringify(datum.text)}`);
       let note = `Date: ${datum.id} ${datum.text}`;
       return note;
     })
-    .append("div")
+    .append("div") // Should I class these as note contents?
     .join("div")
     .append("br");
+  */
+  d3.select("#notes").selectAll(".note")
+    .data(allNotes)
+    .join()
+    .append("div").attr("class", "note-detail")
+    .text(d => {
+      //console.log(JSON.stringify(d));
+      return d.text;
+    });
 }
 
 /*
@@ -193,23 +206,26 @@ function epoch(date) {
 // Store the current state of all note content.
 function storeNoteState() {
   let _allNotes = [];
-  // TODO: Make this a separate function.
+  //console.log(`BEFORE: ${JSON.stringify(allNotes)}`);
   let notes = d3.select("#notes").selectAll(".note").nodes();
   for (let n of notes) {
     // Get the element's id value.
     let noteId = d3.select(n).attr('id');
     let noteDate = Number(noteId.replace(/^note_/, ""));
     let noteContents = [];
-    let children = d3.select(n).selectChildren("div");
+    let children = d3.select(n).selectChildren(".note-detail");
     // NOTE: I feel like I'm abusing D3 when I [c|sh]ould use basic getElement*
     // functions. Or D3 is making it too easy for me to use with functions like
     // d3.map().
     noteContents = d3.map(children, c => d3.select(c).text());
-    console.log(noteContents);
+    console.log(`${noteId}: ${JSON.stringify(noteContents)}`);
     _allNotes.push({id: new Date(noteDate), text: noteContents});
   }
+  // FIXME: Rather than full-on replace, find existing objects in list
+  // and update them.
   // Replace the global array.
   allNotes = _allNotes;
+  //console.log(`AFTER: ${JSON.stringify(allNotes)}`);
 }
 
 // Create a new note element.
@@ -217,16 +233,20 @@ function storeNoteState() {
 function createNote(date) {
   storeNoteState();
   let noteId = `note_${epoch(date)}`;
-  d3.select("#notes").select("ul").append("li").append("div")
+  //d3.select("#notes").select("ul").append("li").append("div")
+  d3.select("#notes").append("div")
     .attr("class", "note")
     .attr("id", `${noteId}`)
     .attr("contenteditable", true);
 
+  let newNote = d3.select(`#${noteId}`);
+  //console.log(newNote.node());
+  newNote.append("div")
+    .attr("class", "note-time")
+    .text(date);
   // Focus on the newly created note.
   // FIXME: This doesn't work quite right. It always focuses on the very last
   // note, regardless of the order in which the notes are created.
-  let newNote = d3.select(`#${noteId}`);
-  //console.log(newNote.node());
   newNote.node().focus();
 
   // Push the new note into our list of notes.
