@@ -197,7 +197,6 @@ function createNote(date) {
   // maybe use selectChildren("div") to get all the notes lines.
   for (let n of notes) {
     let children = d3.select(n).selectChildren("div");
-    //console.log(children);
     for (let c of children) {
       // this works well.
       console.log(d3.select(c).text());
@@ -214,6 +213,7 @@ function createNote(date) {
   // Focus on the newly created note.
   let newNote = d3.select(`#${noteId}`);
   console.log(newNote.node());
+  allNotes.push({id: date, text: 'note'});
   newNote.node().focus();
 }
 
@@ -222,11 +222,7 @@ function tickOnClick(_event, datum) {
   if (! allNotes.find(n => n.id == datum)) {
     // Add another list element.
     createNote(datum);
-    // Add a "note" to our list of notes.
-    allNotes.push({id: datum, text: 'note'});
   }
-  // TODO: Auto-save content in textareas.
-  //console.log(JSON.stringify(allNotes));
 
   renderNotes();
 
@@ -241,8 +237,6 @@ d3.selectAll(".tick").on("click", tickOnClick);
 function timelineOnClick(_event, datum) {
   let date = new Date();
   createNote(date);
-  // We don't have a datum at this part of the DOM.
-  allNotes.push({id: date, text: 'note'});
   renderNotes();
 }
 
