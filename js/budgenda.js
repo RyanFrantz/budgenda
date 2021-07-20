@@ -172,7 +172,7 @@ function renderNotes() {
     .data(allNotes)
     .join("div")
     .text((datum, idx) => {
-      let note = `Date: ${datum.id}`;
+      let note = `Date: ${datum.id} ${datum.text}`;
       return note;
     })
     .append("div")
@@ -190,31 +190,47 @@ function epoch(date) {
   return Date.parse(date);
 }
 
+// Store the current state of all note content.
+function storeNoteState() {
+  let _allNotes = [];
+  // TODO: Make this a separate function.
+  let notes = d3.select("#notes").selectAll(".note").nodes();
+  for (let n of notes) {
+    // Get the element's id value.
+    let noteId = d3.select(n).attr('id');
+    let noteDate = Number(noteId.replace(/^note_/, ""));
+    let noteContents = [];
+    let children = d3.select(n).selectChildren("div");
+    // NOTE: I feel like I'm abusing D3 when I [c|sh]ould use basic getElement*
+    // functions. Or D3 is making it too easy for me to use with functions like
+    // d3.map().
+    noteContents = d3.map(children, c => d3.select(c).text());
+    console.log(noteContents);
+    _allNotes.push({id: new Date(noteDate), text: noteContents});
+  }
+  // Replace the global array.
+  allNotes = _allNotes;
+}
+
 // Create a new note element.
 // Define an id value to aid in storing and sorting notes.
 function createNote(date) {
-  let notes = d3.select("#notes").selectAll(".note").nodes();
-  // maybe use selectChildren("div") to get all the notes lines.
-  for (let n of notes) {
-    let children = d3.select(n).selectChildren("div");
-    for (let c of children) {
-      // this works well.
-      console.log(d3.select(c).text());
-    }
-    //console.log(`NOTE: ${JSON.stringify(n)}`);
-  }
-  // FIXME: This doesn't work quite right. It always focuses on the very last
-  // note, regardless of the order in which the notes are created.
+  storeNoteState();
   let noteId = `note_${epoch(date)}`;
   d3.select("#notes").select("ul").append("li").append("div")
     .attr("class", "note")
     .attr("id", `${noteId}`)
     .attr("contenteditable", true);
+
   // Focus on the newly created note.
+  // FIXME: This doesn't work quite right. It always focuses on the very last
+  // note, regardless of the order in which the notes are created.
   let newNote = d3.select(`#${noteId}`);
-  console.log(newNote.node());
-  allNotes.push({id: date, text: 'note'});
+  //console.log(newNote.node());
   newNote.node().focus();
+
+  // Push the new note into our list of notes.
+  allNotes.push({id: date, text: []});
 }
 
 // Display a tick's text value as a note.
