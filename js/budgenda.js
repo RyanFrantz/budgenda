@@ -159,30 +159,16 @@ function displayTime() {
 
 let allNotes = [];
 
+// FIXME: I think this entire function is buggy/useless/should be replaced.
 function renderNotes() {
   allNotes.sort((a,b) => {
     return a.id - b.id;
   });
 
-  // Since this is a contenteditable element (see createNote())
-  // we add the note's date to it, then the note content as a
-  // child div element.
-  // NOTE: We don't have note content yet, so insert a break.
-  /*
-  d3.select("#notes").selectAll(".note")
-    .data(allNotes)
-    .join("div") // <div class="note"...
-    .text((datum, idx) => {
-      // This creates a bug because the text NEEDS to be in DIVs to be
-      // found later by storeNoteState().
-      console.log(`RENDER NOTES: ${datum.id} => ${JSON.stringify(datum.text)}`);
-      let note = `Date: ${datum.id} ${datum.text}`;
-      return note;
-    })
-    .append("div") // Should I class these as note contents?
-    .join("div")
-    .append("br");
-  */
+  // FIXME: I"m pretty sure this is NOT doing what I expect!
+  // That is, it's creating a structure that doesn't match up with what
+  // storeNoteState() expects to find later. From inspecting the DOM while
+  // testing, it looks like these divs get created outside the .note-details container.
   d3.select("#notes").selectAll(".note")
     .data(allNotes)
     .join()
@@ -206,57 +192,69 @@ function epoch(date) {
 // Store the current state of all note content.
 function storeNoteState() {
   let _allNotes = [];
-  //console.log(`BEFORE: ${JSON.stringify(allNotes)}`);
-  let notes = d3.select("#notes").selectAll(".note").nodes();
+  let notes = d3.select("#notes").selectAll(".note");
   for (let n of notes) {
     // Get the element's id value.
     let noteId = d3.select(n).attr('id');
-    let noteDate = Number(noteId.replace(/^note_/, ""));
-    let noteContents = [];
-    let children = d3.select(n).selectChildren(".note-detail");
+    let _epoch = Number(noteId.replace(/^note_/, ""));
+    // Select all details for this note.
+    let sel = `#${noteId} > .note-details > .note-detail`;
+    let details = d3.select(n).selectAll(sel);
     // NOTE: I feel like I'm abusing D3 when I [c|sh]ould use basic getElement*
     // functions. Or D3 is making it too easy for me to use with functions like
     // d3.map().
-    noteContents = d3.map(children, c => d3.select(c).text());
-    console.log(`${noteId}: ${JSON.stringify(noteContents)}`);
-    _allNotes.push({id: new Date(noteDate), text: noteContents});
+    // Store each detail's text in a list.
+    let noteContents = d3.map(details, d => {
+      return d3.select(d).text();
+    });
+    _allNotes.push({id: _epoch, details: noteContents});
   }
-  // FIXME: Rather than full-on replace, find existing objects in list
-  // and update them.
   // Replace the global array.
   allNotes = _allNotes;
-  //console.log(`AFTER: ${JSON.stringify(allNotes)}`);
 }
 
 // Create a new note element.
 // Define an id value to aid in storing and sorting notes.
 function createNote(date) {
   storeNoteState();
-  let noteId = `note_${epoch(date)}`;
-  //d3.select("#notes").select("ul").append("li").append("div")
-  d3.select("#notes").append("div")
+  let _epoch = epoch(date);
+  let noteId = `note_${_epoch}`;
+  // FIXME: This append creates new notes at the end of the list.
+  // We'll want notes inserted at the correct place chronologically.
+  let newNote = d3.select("#notes").append("div")
     .attr("class", "note")
-    .attr("id", `${noteId}`)
-    .attr("contenteditable", true);
+    .attr("id", `${noteId}`);
 
-  let newNote = d3.select(`#${noteId}`);
-  //console.log(newNote.node());
+  // Create a div above all details that shows the time of the note.
   newNote.append("div")
     .attr("class", "note-time")
     .text(date);
+
+  // Create a contenteditable container for all note details.
+  // As a user types notes, new divs will be created (on line breaks).
+  newNote.append("div")
+    .attr("class", "note-details")
+    .attr("contenteditable", true)
+    .append("div")
+    .attr("class", "note-detail")
+    .text("> ");
+
   // Focus on the newly created note.
   // FIXME: This doesn't work quite right. It always focuses on the very last
   // note, regardless of the order in which the notes are created.
-  newNote.node().focus();
+  let sel = `#${noteId} > .note-details > .note-detail`;
+  let firstDetail = document.querySelector(sel);
+  //console.log(firstDetail);
+  firstDetail.focus();
 
   // Push the new note into our list of notes.
-  allNotes.push({id: date, text: []});
+  allNotes.push({id: _epoch, details: []});
 }
 
-// Display a tick's text value as a note.
+// Create a new note when a tick is clicked.
 function tickOnClick(_event, datum) {
-  if (! allNotes.find(n => n.id == datum)) {
-    // Add another list element.
+  // datum here is a Date string.
+  if (!allNotes.find(n => n.id == epoch(datum))) {
     createNote(datum);
   }
 
