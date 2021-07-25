@@ -193,11 +193,42 @@ function storeNoteState() {
   allNotes = _allNotes;
 }
 
+/* Given an epoch value, search among existing notes to find which of them
+ * have an earlier date and return that note'd ID.
+ * This will be used to figure how where to insert a new note so that it
+ * resides chronologically in the set of notes.
+ */
+function earlierNote(newNoteEpoch) {
+  // Create a list of notes' epoch values...
+  let notes = d3.select("#notes").selectAll(".note");
+  let noteEpochs = d3.map(notes, n => {
+    let noteId = d3.select(n).attr("id");
+    let noteEpoch = Number(noteId.replace(/^note_/, ""));
+    return noteEpoch;
+  });
+  // ...sort them in descending order...
+  noteEpochs.sort((a,b) => b - a);
+  // ...and find the first value that is lower than newNoteEpoch.
+  // If nothing is found, _epoch is the earliest.
+  let earlier = noteEpochs.find(e => e < newNoteEpoch);
+  console.log(noteEpochs);
+  console.log(`EARLIER: ${earlier}`);
+}
+
 // Create a new note element.
 // Define an id value to aid in storing and sorting notes.
 function createNote(date) {
   storeNoteState();
   let _epoch = epoch(date);
+  // Secnarios:
+  // 1. There are no notes so we append to the top-level #notes.
+  // 2. There are existing notes and this note is earlier than them all, so
+  //    insert before the earliest existing note.
+  // 3. There are existing notes and this note sits in between two of them, so
+  //    insert it accordingly.
+  // 4. There are existing notes and this note is later than them all, so
+  //    insert after the latest existing note.
+  earlierNote(_epoch);
   let noteId = `note_${_epoch}`;
   // FIXME: This append creates new notes at the end of the list.
   // We'll want notes inserted at the correct place chronologically.
