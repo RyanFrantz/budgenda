@@ -159,26 +159,6 @@ function displayTime() {
 
 let allNotes = [];
 
-// FIXME: I think this entire function is buggy/useless/should be replaced.
-function renderNotes() {
-  allNotes.sort((a,b) => {
-    return a.id - b.id;
-  });
-
-  // FIXME: I"m pretty sure this is NOT doing what I expect!
-  // That is, it's creating a structure that doesn't match up with what
-  // storeNoteState() expects to find later. From inspecting the DOM while
-  // testing, it looks like these divs get created outside the .note-details container.
-  d3.select("#notes").selectAll(".note")
-    .data(allNotes)
-    .join()
-    .append("div").attr("class", "note-detail")
-    .text(d => {
-      //console.log(JSON.stringify(d));
-      return d.text;
-    });
-}
-
 /*
  *  Given a date, return milliseconds since the epoch.
  * Sat Jul 17 2021 16:57:34 GMT-0400 (Eastern Daylight Time)
@@ -258,8 +238,6 @@ function tickOnClick(_event, datum) {
     createNote(datum);
   }
 
-  renderNotes();
-
   // We have a click event registered on a parent that we don't
   // want to fire.
   _event.stopPropagation();
@@ -271,7 +249,6 @@ d3.selectAll(".tick").on("click", tickOnClick);
 function timelineOnClick(_event, datum) {
   let date = new Date();
   createNote(date);
-  renderNotes();
 }
 
 d3.selectAll(".timeline").on("click", timelineOnClick);
