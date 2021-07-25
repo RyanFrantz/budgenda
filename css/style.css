@@ -21,16 +21,6 @@ svg {
     border-width: 1px;
     border-radius: 5px;
 }
-ul {
-    padding: 5px;
-}
-li {
-    list-style: none;
-    margin-right: 5px;
-}
-li:nth-child(even) {
-    margin-left: 10px;
-}
 .timeline,
 .tick {
     cursor: pointer;
@@ -39,10 +29,15 @@ li:nth-child(even) {
     border-radius: 5px;
     border-style: solid;
     border-width: 1px;
+    /* Kinda fun.
+    border-top: 1px solid;
+    border-left: 1px solid;
+    */
     margin: 2px;
     padding: 2px;
-    width: 100%;
+    /* Prevent this div from spilling over its parent. */
+    width: calc(100% -2px);
 }
-text:hover {
-    fill: red;
+.note:nth-child(even) {
+    margin-left: 10px;
 }
