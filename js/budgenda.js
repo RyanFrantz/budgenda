@@ -206,13 +206,37 @@ function earlierNote(newNoteEpoch) {
     let noteEpoch = Number(noteId.replace(/^note_/, ""));
     return noteEpoch;
   });
+
+  // If no notes exist, return the new note's epoch.
+  if (!noteEpochs.length) {
+    console.log(`NEW NOTE IS THE FIRST NOTE: ${newNoteEpoch}`);
+    return newNoteEpoch;
+  }
+
   // ...sort them in descending order...
   noteEpochs.sort((a,b) => b - a);
   // ...and find the first value that is lower than newNoteEpoch.
   // If nothing is found, _epoch is the earliest.
   let earlier = noteEpochs.find(e => e < newNoteEpoch);
+  let later = noteEpochs.find(e => e > newNoteEpoch);
   console.log(noteEpochs);
   console.log(`EARLIER: ${earlier}`);
+  console.log(`LATER: ${later}`);
+  if (!earlier) {
+    // The new note is younger than all existing notes.
+    // Return the earliest existing note's epoch.
+    console.log(`NEW NOTE IS YOUNGEST NOTE: ${noteEpochs.slice(-1)}`);
+    return noteEpochs.slice(-1);
+  }
+  if (earlier && later) {
+    console.log(`${earlier} < ${newNoteEpoch} < ${later}`);
+    // We want to be inserted before the note that should follow us.
+    return later;
+  }
+  if (earlier && !later) {
+    console.log(`${newNoteEpoch} GOES AT THE END`);
+    return null;
+  }
 }
 
 // Create a new note element.
@@ -222,19 +246,27 @@ function createNote(date) {
   let _epoch = epoch(date);
   // Secnarios:
   // 1. There are no notes so we append to the top-level #notes.
-  // 2. There are existing notes and this note is earlier than them all, so
-  //    insert before the earliest existing note.
-  // 3. There are existing notes and this note sits in between two of them, so
-  //    insert it accordingly.
-  // 4. There are existing notes and this note is later than them all, so
-  //    insert after the latest existing note.
-  earlierNote(_epoch);
+  // earlierNote(_epoch) == _epoch
+  // 2. There are existing notes so we determine which to insert before.
+  // earlierNote(_epoch) == <some epoch to insert before>
+  // 3. There are existing notes and this note is older than them all so
+  //    we append to the top-level #notes.
+  // earlierNote(_epoch) == <some epoch to insert before>
   let noteId = `note_${_epoch}`;
-  // FIXME: This append creates new notes at the end of the list.
-  // We'll want notes inserted at the correct place chronologically.
-  let newNote = d3.select("#notes").append("div")
-    .attr("class", "note")
-    .attr("id", `${noteId}`);
+  let newNote;
+  let earlierNoteEpoch = earlierNote(_epoch);
+  if (! earlierNoteEpoch || earlierNoteEpoch == _epoch) {
+    // append to top-level #notes.
+    newNote = d3.select("#notes").append("div")
+      .attr("class", "note")
+      .attr("id", `${noteId}`);
+  } else {
+    // insert note after the given note's ID that matches insertNoteBefore
+    let earlierNoteId = `#note_${earlierNoteEpoch}`;
+    newNote = d3.select("#notes").insert("div", earlierNoteId)
+      .attr("class", "note")
+      .attr("id", `${noteId}`);
+  }
 
   // Create a div above all details that shows the time of the note.
   newNote.append("div")
@@ -248,6 +280,9 @@ function createNote(date) {
     .attr("contenteditable", true)
     .append("div")
     .attr("class", "note-detail")
+    /* SOON
+    .attr("tabindex", "0")
+    */
     .text("> ");
 
   // Focus on the newly created note.
