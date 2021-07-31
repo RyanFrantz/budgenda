@@ -209,49 +209,47 @@ function earlierNote(newNoteEpoch) {
 
   // If no notes exist, return the new note's epoch.
   if (!noteEpochs.length) {
-    console.log(`NEW NOTE IS THE FIRST NOTE: ${newNoteEpoch}`);
     return newNoteEpoch;
   }
 
   // ...sort them in descending order...
   noteEpochs.sort((a,b) => b - a);
   // ...and find the first value that is lower than newNoteEpoch.
-  // If nothing is found, _epoch is the earliest.
   let earlier = noteEpochs.find(e => e < newNoteEpoch);
-  let later = noteEpochs.find(e => e > newNoteEpoch);
-  console.log(noteEpochs);
-  console.log(`EARLIER: ${earlier}`);
-  console.log(`LATER: ${later}`);
+  // If idxLater == -1, earlier is the _earliest_ because -1 indicates we've wrapped to the end of the array.
+  // Calling an array with index -1 returns undefined.
+  let idxLater = noteEpochs.indexOf(earlier) - 1;
+  let later = noteEpochs[idxLater];
+
+  // The new note is younger than all existing notes.
+  // Return the earliest existing note's epoch.
   if (!earlier) {
-    // The new note is younger than all existing notes.
-    // Return the earliest existing note's epoch.
-    console.log(`NEW NOTE IS YOUNGEST NOTE: ${noteEpochs.slice(-1)}`);
-    return noteEpochs.slice(-1);
+    return noteEpochs.slice(-1); // Last element in descending order.
   }
+  // When our note is between two, insert it before the later of them.
   if (earlier && later) {
-    console.log(`${earlier} < ${newNoteEpoch} < ${later}`);
-    // We want to be inserted before the note that should follow us.
     return later;
   }
+  // When we have an earlier value but nothing later, this note goes at the end.
   if (earlier && !later) {
-    console.log(`${newNoteEpoch} GOES AT THE END`);
     return null;
   }
 }
 
-// Create a new note element.
-// Define an id value to aid in storing and sorting notes.
+/* Create a new note element.
+ * Secnarios:
+ * 1. There are no notes so we append to the top-level #notes.
+ *    earlierNote(_epoch) == _epoch
+ * 2. There are existing notes so we determine which to insert before.
+ *    earlierNote(_epoch) == <some epoch to insert before>
+ * 3. There are existing notes and this note is older than them all so
+ *    we append to the top-level #notes.
+ *    earlierNote(_epoch) == null
+*/
 function createNote(date) {
   storeNoteState();
   let _epoch = epoch(date);
-  // Secnarios:
-  // 1. There are no notes so we append to the top-level #notes.
-  // earlierNote(_epoch) == _epoch
-  // 2. There are existing notes so we determine which to insert before.
-  // earlierNote(_epoch) == <some epoch to insert before>
-  // 3. There are existing notes and this note is older than them all so
-  //    we append to the top-level #notes.
-  // earlierNote(_epoch) == <some epoch to insert before>
+  // Define an id value to aid in storing and sorting notes.
   let noteId = `note_${_epoch}`;
   let newNote;
   let earlierNoteEpoch = earlierNote(_epoch);
