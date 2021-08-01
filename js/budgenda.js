@@ -278,17 +278,14 @@ function createNote(date) {
     .attr("contenteditable", true)
     .append("div")
     .attr("class", "note-detail")
-    /* SOON
-    .attr("tabindex", "0")
-    */
-    .text("> ");
+    .attr("tabindex", "0") // Make this focusable.
+    /* Insert a zero-width character to give the element some height.*/
+    .html("&#8203;");
 
   // Focus on the newly created note.
-  // FIXME: This doesn't work quite right. It always focuses on the very last
-  // note, regardless of the order in which the notes are created.
   let sel = `#${noteId} > .note-details > .note-detail`;
+  d3.select(sel).on("focus", setCursor); // On focus, set the cursor.
   let firstDetail = document.querySelector(sel);
-  //console.log(firstDetail);
   firstDetail.focus();
 
   // Push the new note into our list of notes.
@@ -317,3 +314,16 @@ function timelineOnClick(_event, datum) {
 
 d3.selectAll(".timeline").on("click", timelineOnClick);
 
+/* Set the cursor so it visibly flashes and allows the user to start typing. */
+function setCursor(_event, datum) {
+  el = _event.target;
+  // Selection here is, roughly, the tick that was clicked.
+  let sel = document.getSelection();
+  /* By calling collapse() with the node element in the event target, we can
+   * tell the browser to blink the caret there.
+   * Per https://developer.mozilla.org/en-US/docs/Web/API/Selection/collapse:
+   * If the content is focused and editable, the caret will blink there.
+   */
+  let offset = 1;
+  sel.collapse(el, offset);
+}

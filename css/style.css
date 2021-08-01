@@ -41,3 +41,11 @@ svg {
 .note:nth-child(even) {
     margin-left: 10px;
 }
+
+.note-detail {
+    padding-left: 2px;
+}
+
+:focus {
+    background-color: #eee;
+}
