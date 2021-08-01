@@ -66,18 +66,6 @@ d3.selectAll(".tick line")
   if(idx % 2 !== 0) d3.select(this)
     .attr("y2", "16");
 });
-/*
- * - or -
- *
-d3.selectAll(".tick line")
-  .attr("y2", function(datum, idx) {
-    if(idx % 2 !== 0) {
-      return "16";
-    } else {
-      return "6";
-    }
-  });
-*/
 
 // We also need to push the placement of text to be under the tick line.
 let _text = d3.selectAll(".tick text");
@@ -93,7 +81,6 @@ function refreshTicks() {
 }
 
 // Restore all ticks to their original styling.
-/*
 function restoreTicks() {
   d3.selectAll("text")
   .attr("font-size", "10")
@@ -104,24 +91,18 @@ function restoreTicks() {
   .attr("stroke-width", "1")
   .attr("y2", "6");
 }
-*/
 
-function getSeconds() {
-  let today = new Date();
-  return today.getSeconds();
-}
 // Select a tick where the text is a specific value.
-// We can use this to  modify the tick whose text value matches the seconds!
-// TODO: Rename function to clarify it updates the tick whose second is displayed.
+// We can use this to  modify the tick whose text value matches the time.
 function updateTick() {
-  //restoreTicks();
-  let seconds = getSeconds();
+  restoreTicks();
+  let time = getTime();
 
   // Select all tick elements, filtering on the one that matches the seconds
   // value. Then, style it.
   let tick = d3.selectAll("g.tick")
     .filter(function() {
-      return d3.select(this.lastChild).text() == seconds;
+      return d3.select(this.lastChild).text() == time;
     });
 
   // We expect only 2 children: 'line' and 'text'.
@@ -139,6 +120,14 @@ function prefix_zero(num) {
     return num < 10 ? `0${num}` : num;
 }
 
+// Return the time in HH:MM format.
+function getTime() {
+  let now  = new Date();
+  let hour = prefix_zero(now.getHours());
+  let min  = prefix_zero(now.getMinutes());
+  return `${hour}:${min}`;
+}
+
 // This is one half of a main loop between this function and displayTime().
 function refresh_time() {
     var interval = 1000; // Milliseconds.
@@ -153,7 +142,7 @@ function displayTime() {
     var second   = prefix_zero(today.getSeconds());
     var the_time = `${hour}:${minute}:${second}`;
     document.getElementById('the_clock').innerHTML = the_time;
-    //updateTick(); // TODO: Fix this; move to minute-ly.
+    updateTick();
     refresh_time();
 }
 
