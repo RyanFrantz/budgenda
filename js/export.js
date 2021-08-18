@@ -24,19 +24,39 @@ function getNotesForExport() {
   return notesToExport;
 }
 
-// Make the modal visible when "Export Notes" is clicked.
+// Clear any existing modal content (e.g. from previous exports) so that we can
+// build it afresh from current notes.
+function clearModalContent() {
+  console.log(modalContent.childNodes);
+  while (modalContent.hasChildNodes()) {
+    modalContent.removeChild(modalContent.firstChild);
+  }
+}
+
+// When the button is clicked, populate the modal with note details.
 btn.onclick = function() {
+  clearModalContent();
+  // Make the modal visible.
   modal.style.display = "block";
-  let newNode = document.createElement("div");
-  // Insert note details after the modal-close. We do this by inserting
-  // before the next sibling, effectively, "after".
-  modalClose.parentNode.insertBefore(newNode, modalClose.nextSibling);
+
   let exportedNotes = getNotesForExport();
-  console.log(JSON.stringify(exportedNotes));
-  // TODO: Create the appropriate elements from the notes and append them?
-  // appendChild?
-  let newSpan = document.createElement("span");
-  modalContent.appendChild(newSpan);
+  for (let note of exportedNotes) {
+    // Append a p element containing the note's date.
+    let dateP = document.createElement("p");
+    let noteDate = new Date(Number(note.id));
+    dateP.innerText = noteDate;
+    modalContent.appendChild(dateP);
+
+    // For each detail, append a p element.
+    for (let detail of note.details) {
+      // Skip empty lines.
+      if (detail.length > 0) {
+        let detailP = document.createElement("p");
+        detailP.innerText = detail;
+        modalContent.appendChild(detailP);
+      }
+    }
+  }
 }
 
 // If the modal close icon is clicked, make the modal invisible.
