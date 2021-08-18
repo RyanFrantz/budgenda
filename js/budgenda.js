@@ -153,6 +153,9 @@ function startAgenda() {
   let now = new Date();
   // Create very first note.
   createNote(now);
+  // There should only be a single note detail at this point.
+  let firstNoteDetail = d3.select('.note-detail');
+  firstNoteDetail.text('Meeting started');
   // Get the time display ticking.
   displayTime();
 }
