@@ -148,6 +148,15 @@ function displayTime() {
 
 let allNotes = [];
 
+// Get the agenda started by creating an initial note.
+function startAgenda() {
+  let now = new Date();
+  // Create very first note.
+  createNote(now);
+  // Get the time display ticking.
+  displayTime();
+}
+
 /*
  *  Given a date, return milliseconds since the epoch.
  * Sat Jul 17 2021 16:57:34 GMT-0400 (Eastern Daylight Time)
