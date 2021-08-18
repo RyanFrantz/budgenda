@@ -10,6 +10,17 @@
         </div>
         <script src="js/budgenda.js"></script>
         <div id="notes">
+            <button id="export-notes">
+                Export Notes
+            </button>
         </div>
+        <div id="export-notes-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span> <!-- an "x" -->
+                <br/>
+            </div>
+        </div>
+        <!-- Load after the modal is added to the DOM. -->
+        <script src="js/export.js"></script>
     </body>
 </html>
