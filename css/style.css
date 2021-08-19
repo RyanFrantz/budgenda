@@ -71,6 +71,8 @@ svg {
 /* Modal Content */
 .modal-content {
     background-color: #fefefe;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
@@ -82,6 +84,8 @@ svg {
 
 #modal-content-header {
     background-color: #fefefe;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     height: 15px;
     margin: auto;
     padding: 20px;
