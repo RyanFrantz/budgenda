@@ -106,3 +106,19 @@ svg {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Style largely lifted from Mozilla's MDN docs. */
+.copy-to-clipboard {
+    background: url("../img/copy-to-clipboard.svg") 50% no-repeat;
+    background-position: 61% 45%;
+    background-size: 16px;
+    border: 0;
+    cursor: pointer;
+    height: 36px;
+    margin: 0;
+    padding: 6px;
+    float: right;
+    vertical-align: middle;
+    width: 33px;
+    z-index: 100;
+}
