@@ -16,7 +16,8 @@
         </div>
         <div id="export-notes-modal" class="modal">
             <div id="modal-content-header">
-                <button type="button" class="copy-to-clipboard"></button>
+                <button type="button" id="copy-to-clipboard" class="copy-icon">
+                </button>
                 <!-- an "x" -->
                 <span class="modal-close">&times;</span>
             </div>
@@ -25,5 +26,6 @@
         </div>
         <!-- Load after the modal is added to the DOM. -->
         <script src="js/export.js"></script>
+        <script src="js/clipboard.js"></script>
     </body>
 </html>

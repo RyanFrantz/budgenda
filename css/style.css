@@ -108,7 +108,7 @@ svg {
 }
 
 /* Style largely lifted from Mozilla's MDN docs. */
-.copy-to-clipboard {
+.copy-icon {
     background: url("../img/copy-to-clipboard.svg") 50% no-repeat;
     background-position: 61% 45%;
     background-size: 16px;
