@@ -9,6 +9,9 @@
             <span id="the_clock"></span>
         </div>
         <script src="js/budgenda.js"></script>
+        <div id="help-message">
+        Need help? Press Meta + /
+        </div>
         <div id="notes">
             <button id="export-notes">
                 Export Notes
@@ -24,8 +27,14 @@
             <div id="modal-content" class="modal-content">
             </div>
         </div>
+        <div id="help-modal" class="modal">
+            <div class="help-content">
+                I'm here to help!
+            </div>
+        </div>
         <!-- Load after the modal is added to the DOM. -->
         <script src="js/export.js"></script>
         <script src="js/clipboard.js"></script>
+        <script src="js/keyboard-shortcuts.js"></script>
     </body>
 </html>
