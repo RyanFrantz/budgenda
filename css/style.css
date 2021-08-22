@@ -129,10 +129,14 @@ svg {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 30%;
     min-height: 100px;
 }
 
 #help-message {
     margin: 10px 50px;
+}
+
+.help-kb-shortcut {
+    float: right;
 }

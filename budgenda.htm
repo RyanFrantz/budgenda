@@ -10,7 +10,9 @@
         </div>
         <script src="js/budgenda.js"></script>
         <div id="help-message">
-        Need help? Press Meta + /
+            <p>Click a tick on the timeline to create a note for that time.
+            Click anywhere in the timeline box to create a note for "now".</p>
+            <p>Need help? Press Ctrl + /</p>
         </div>
         <div id="notes">
             <button id="export-notes">
@@ -29,7 +31,19 @@
         </div>
         <div id="help-modal" class="modal">
             <div class="help-content">
-                I'm here to help!
+                <p><b>Keyboard Shortcuts</b></p>
+                <p>
+                Clear all modals: <span class="help-kb-shortcut">Esc</span>
+                </p>
+                <p>
+                Toggle this help screen: <span class="help-kb-shortcut">Ctrl + /</span>
+                </p>
+                <p>
+                Export notes: <span class="help-kb-shortcut">Ctrl + e</span>
+                </p>
+                <p>
+                Create a new note (time is "now"): <span class="help-kb-shortcut">Ctrl + n</span>
+                </p>
             </div>
         </div>
         <!-- Load after the modal is added to the DOM. -->

@@ -1,7 +1,7 @@
 // Largely lifted from https://www.w3schools.com/howto/howto_css_modals.asp
 const modal = document.getElementById("export-notes-modal");
 const modalContent = document.getElementById("modal-content");
-const btn = document.getElementById("export-notes");
+const exportNotesBtn = document.getElementById("export-notes");
 const modalClose = document.getElementsByClassName("modal-close")[0];
 
 // Basically storeNoteState from js/budgenda.js
@@ -33,8 +33,8 @@ function clearModalContent() {
   }
 }
 
-// When the button is clicked, populate the modal with note details.
-btn.onclick = function() {
+// Populate the export modal with note details.
+function openExportModal() {
   clearModalContent();
   // Make the modal visible.
   modal.style.display = "block";
@@ -58,6 +58,9 @@ btn.onclick = function() {
     }
   }
 }
+
+// Handler for clicking "Export Notes".
+exportNotesBtn.onclick = openExportModal;
 
 // If the modal close icon is clicked, make the modal invisible.
 modalClose.onclick = function() {
