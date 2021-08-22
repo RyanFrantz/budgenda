@@ -20,6 +20,11 @@ function handleKeydown(_event) {
           (helpModal.style.display.length === 0 ||
             helpModal.style.display === "none") ? "block": "none";
         break;
+      case 'c':
+        // Copy exported notes to the clipboard.
+        // Only works when the export modal has been populated.
+        copyExportedNotes();
+        break;
       case 'e':
         // Open the export modal.
         openExportModal();
