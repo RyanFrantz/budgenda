@@ -237,6 +237,15 @@ function earlierNote(newNoteEpoch) {
   }
 }
 
+// Given a date string, parse it, and return the time.
+function dateToTime(date) {
+  let d = new Date(Date.parse(date))
+  let hours = prefix_zero(d.getHours());
+  let minutes = prefix_zero(d.getMinutes());
+  let seconds = prefix_zero(d.getSeconds());
+  return `${hours}:${minutes}:${seconds}`;
+}
+
 /* Create a new note element.
  * Secnarios:
  * 1. There are no notes so we append to the top-level #notes.
@@ -270,7 +279,8 @@ function createNote(date) {
   // Create a div above all details that shows the time of the note.
   newNote.append("div")
     .attr("class", "note-time")
-    .text(date);
+    //.text(date);
+    .text(dateToTime(date));
 
   // Create a contenteditable container for all note details.
   // As a user types notes, new divs will be created (on line breaks).

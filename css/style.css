@@ -140,3 +140,7 @@ svg {
 .help-kb-shortcut {
     float: right;
 }
+
+.command {
+    font-family: 'Courier New', monospace;
+}

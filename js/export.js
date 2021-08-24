@@ -44,7 +44,8 @@ function openExportModal() {
     // Append a p element containing the note's date.
     let dateP = document.createElement("p");
     let noteDate = new Date(Number(note.id));
-    dateP.innerText = noteDate;
+    //dateP.innerText = noteDate;
+    dateP.innerText = dateToTime(noteDate);
     modalContent.appendChild(dateP);
 
     // For each detail, append a p element.
