@@ -57,6 +57,9 @@ function openExportModal() {
         modalContent.appendChild(detailP);
       }
     }
+    // Add line break after each note, to aid legibility.
+    let br = document.createElement("br");
+    modalContent.appendChild(br);
   }
 }
 
