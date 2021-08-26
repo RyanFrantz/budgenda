@@ -6,6 +6,7 @@ const modalClose = document.getElementsByClassName("modal-close")[0];
 
 // Basically storeNoteState from js/budgenda.js
 function getNotesForExport() {
+  let followUpNotes = [];
   let notesToExport = [];
   let notes = d3.select("#notes").selectAll(".note");
   for (let n of notes) {
@@ -20,14 +21,19 @@ function getNotesForExport() {
       return d3.select(d).text();
     });
     notesToExport.push({id: _epoch, details: noteContents});
+    // If a note is marked for follow up, push its contents into an array
+    // dedicated to tracking that.
+    let followUp = document.getElementById(`${noteId}_follow_up`);
+    if (followUp.checked) {
+      followUpNotes.push({id: _epoch, details: noteContents});
+    }
   }
-  return notesToExport;
+  return [notesToExport, followUpNotes];
 }
 
 // Clear any existing modal content (e.g. from previous exports) so that we can
 // build it afresh from current notes.
 function clearModalContent() {
-  console.log(modalContent.childNodes);
   while (modalContent.hasChildNodes()) {
     modalContent.removeChild(modalContent.firstChild);
   }
@@ -39,7 +45,41 @@ function openExportModal() {
   // Make the modal visible.
   modal.style.display = "block";
 
-  let exportedNotes = getNotesForExport();
+  let [exportedNotes, followUpNotes] = getNotesForExport();
+  let followUpTitle = document.createElement("h3");
+  followUpTitle.innerText = "Follow-up";
+  modalContent.appendChild(followUpTitle);
+  if (followUpNotes.length == 0) {
+    let noFollowUp = document.createElement("p");
+    noFollowUp.innerText = "Nothing is marked for follow up."
+    modalContent.appendChild(noFollowUp);
+  } else {
+    // TODO: Dedupe this and the same code below for exportedNotes.
+    for (let note of followUpNotes) {
+      // Append a p element containing the note's date.
+      let dateP = document.createElement("p");
+      let noteDate = new Date(Number(note.id));
+      dateP.innerText = dateToTime(noteDate);
+      modalContent.appendChild(dateP);
+
+      // For each detail, append a p element.
+      for (let detail of note.details) {
+        // Skip empty lines.
+        if (detail.length > 0) {
+          let detailP = document.createElement("p");
+          detailP.innerText = detail;
+          modalContent.appendChild(detailP);
+        }
+      }
+      // Add line break after each note, to aid legibility.
+      let br = document.createElement("br");
+      modalContent.appendChild(br);
+    }
+  }
+
+  let minutesTitle = document.createElement("h3");
+  minutesTitle.innerText = "Meeting Minutes";
+  modalContent.appendChild(minutesTitle);
   for (let note of exportedNotes) {
     // Append a p element containing the note's date.
     let dateP = document.createElement("p");

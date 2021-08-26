@@ -276,6 +276,18 @@ function createNote(date) {
       .attr("id", `${noteId}`);
   }
 
+  let checkboxId = `${noteId}_follow_up`;
+  newNote.append("input")
+    .attr("type", "checkbox")
+    .attr("id", checkboxId)
+    .attr("class", "note-follow-up")
+    .attr("name", "follow-up");
+
+  newNote.append("label")
+    .attr("for", checkboxId)
+    .attr("class", "note-follow-up")
+    .text("Follow-up");
+
   // Create a div above all details that shows the time of the note.
   newNote.append("div")
     .attr("class", "note-time")

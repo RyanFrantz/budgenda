@@ -144,3 +144,7 @@ svg {
 .command {
     font-family: 'Courier New', monospace;
 }
+
+.note-follow-up {
+    float: right;
+}
