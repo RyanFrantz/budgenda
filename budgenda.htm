@@ -2,8 +2,25 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
     </head>
     <body onload='startAgenda();'>
+        <div class="main-container">
+        <div class="sidebar">
+            <a href="#" title="Ad hoc">
+                <span class="material-icons">bolt</span>
+            </a>
+            <a href="#" title="Presentation">
+                <span class="material-icons">tv</span>
+            </a>
+            <a href="#" title="Decision">
+                <span class="material-icons">thumbs_up_down</span>
+            </a>
+        </div>
+
+        <div class="content">
+
         <script src="js/d3.v6.min.js"></script>
         <div class="clock">
             <span id="the_clock"></span>
@@ -49,6 +66,10 @@
                 Create a new note (time is "now"): <span class="help-kb-shortcut command">Ctrl + n</span>
                 </p>
             </div>
+        </div>
+        <!-- end "content" -->
+        </div>
+        <!-- end main-container" -->
         </div>
         <!-- Load after the modal is added to the DOM. -->
         <script src="js/export.js"></script>

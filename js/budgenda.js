@@ -15,7 +15,7 @@ const width = 1200 - margin.left - margin.right,
 
 
 // TODO: Learn more about this.
-const svg = d3.select("body").append("svg")
+const svg = d3.select("body").select(".main-container").select(".content").append("svg")
               .attr("class", "timeline")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
