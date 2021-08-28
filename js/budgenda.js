@@ -148,9 +148,16 @@ function displayTime() {
 
 let allNotes = [];
 
+// We'll set meetingStart when the agenda kicks off. We can use it as a key
+// in localStorage to maintain some state for the meeting.
+let meetingStart;
+
 // Get the agenda started by creating an initial note.
 function startAgenda() {
+  // Clear localStorage on first load.
+  localStorage.clear();
   let now = new Date();
+  meetingStart = now;
   // Create very first note.
   createNote(now);
   // There should only be a single note detail at this point.
@@ -192,6 +199,8 @@ function storeNoteState() {
   }
   // Replace the global array.
   allNotes = _allNotes;
+  // Store an up-to-date copy in localStorage, keyed by the meeting's start date.
+  localStorage.setItem(meetingStart, JSON.stringify(_allNotes));
 }
 
 /* Given an epoch value, search among existing notes to find which of them
