@@ -7,68 +7,74 @@
     </head>
     <body onload='startAgenda();'>
         <div class="main-container">
-        <div class="sidebar">
-            <a href="#" title="Ad hoc" onclick="window.location.reload();">
-                <span class="material-icons">bolt</span>
-            </a>
-            <a href="#" title="Presentation">
-                <span class="material-icons">tv</span>
-            </a>
-            <a href="#" title="Decision">
-                <span class="material-icons">thumbs_up_down</span>
-            </a>
-        </div>
+            <div class="sidebar">
+                <!-- Refresh the page so that we start a new ad hoc meeting. -->
+                <a href="#" title="Ad hoc" onclick="window.location.reload();">
+                    <span class="material-icons">bolt</span>
+                </a>
+                <!-- TODO: Start a presentation-/demo-type meeting. -->
+                <a href="#" title="Presentation">
+                    <span class="material-icons">tv</span>
+                </a>
+                <!-- TODO: Start a decision-type meeting. -->
+                <a href="#" title="Decision">
+                    <span class="material-icons">thumbs_up_down</span>
+                </a>
+                <!-- List all stored meetings. -->
+                <a href="#" title="All Meetings">
+                    <span class="material-icons">event</span>
+                </a>
+            </div>
 
-        <div class="content">
-
-        <script src="js/d3.v6.min.js"></script>
-        <div class="clock">
-            <span id="the_clock"></span>
-        </div>
-        <script src="js/budgenda.js"></script>
-        <div id="help-message">
-            <p>Click a tick on the timeline to create a note for that time.
-            Click anywhere in the timeline box to create a note for "now".</p>
-            <p>Need help? Press Ctrl + /</p>
-        </div>
-        <div id="notes">
-            <button id="export-notes">
-                Export Notes
-            </button>
-        </div>
-        <div id="export-notes-modal" class="modal">
-            <div id="modal-content-header">
-                Press <span class="command">Ctrl + c</span> to select/copy all notes!
-                <button type="button" id="copy-to-clipboard" class="copy-icon">
-                </button>
-                <!-- an "x" -->
-                <span class="modal-close">&times;</span>
+            <div class="content">
+                <script src="js/d3.v6.min.js"></script>
+                <div class="clock">
+                    <span id="the_clock"></span>
+                </div>
+                <script src="js/budgenda.js"></script>
+                <div id="help-message">
+                    <p>Click a tick on the timeline to create a note for that time.
+                    Click anywhere in the timeline box to create a note for "now".</p>
+                    <p>Need help? Press Ctrl + /</p>
+                </div>
+                <div id="notes">
+                    <button id="export-notes">
+                        Export Notes
+                    </button>
+                </div>
+                <div id="export-notes-modal" class="modal">
+                    <div id="modal-content-header">
+                        Press <span class="command">Ctrl + c</span> to select/copy all notes!
+                        <button type="button" id="copy-to-clipboard" class="copy-icon">
+                        </button>
+                        <!-- an "x" -->
+                        <span class="modal-close">&times;</span>
+                    </div>
+                    <div id="modal-content" class="modal-content">
+                    </div>
+                </div>
+                <div id="help-modal" class="modal">
+                    <div class="help-content">
+                        <p><b>Keyboard Shortcuts</b></p>
+                        <p>
+                        Clear all modals: <span class="help-kb-shortcut command">Esc</span>
+                        </p>
+                        <p>
+                        Toggle this help screen: <span class="help-kb-shortcut command">Ctrl + /</span>
+                        </p>
+                        <p>
+                        Copy notes to clipboard (When exporting notes): <span class="help-kb-shortcut command">Ctrl + c</span>
+                        </p>
+                        <p>
+                        Export notes: <span class="help-kb-shortcut command">Ctrl + e</span>
+                        </p>
+                        <p>
+                        Create a new note (time is "now"): <span class="help-kb-shortcut command">Ctrl + n</span>
+                        </p>
+                    </div>
+                </div>
+            <!-- end "content" -->
             </div>
-            <div id="modal-content" class="modal-content">
-            </div>
-        </div>
-        <div id="help-modal" class="modal">
-            <div class="help-content">
-                <p><b>Keyboard Shortcuts</b></p>
-                <p>
-                Clear all modals: <span class="help-kb-shortcut command">Esc</span>
-                </p>
-                <p>
-                Toggle this help screen: <span class="help-kb-shortcut command">Ctrl + /</span>
-                </p>
-                <p>
-                Copy notes to clipboard (When exporting notes): <span class="help-kb-shortcut command">Ctrl + c</span>
-                </p>
-                <p>
-                Export notes: <span class="help-kb-shortcut command">Ctrl + e</span>
-                </p>
-                <p>
-                Create a new note (time is "now"): <span class="help-kb-shortcut command">Ctrl + n</span>
-                </p>
-            </div>
-        </div>
-        <!-- end "content" -->
-        </div>
         <!-- end main-container" -->
         </div>
         <!-- Load after the modal is added to the DOM. -->
