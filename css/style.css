@@ -82,7 +82,7 @@ svg {
     min-height: 100px;
 }
 
-#modal-content-header {
+.modal-content-header {
     background-color: #fefefe;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -164,4 +164,8 @@ svg {
     display: block;
     margin: 25px;
     padding: 10px;
+}
+
+.float-right {
+    float: right;
 }

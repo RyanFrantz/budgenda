@@ -29,6 +29,10 @@ function handleKeydown(_event) {
         // Open the export modal.
         openExportModal();
         break;
+      case 'm':
+        // Open the meetings modal.
+        openMeetingsModal();
+        break;
       case 'n':
         // Create a new note at time "now".
         createNote(new Date());
