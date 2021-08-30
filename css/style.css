@@ -169,3 +169,7 @@ svg {
 .float-right {
     float: right;
 }
+
+.modal-content-header a {
+    color: black;
+}

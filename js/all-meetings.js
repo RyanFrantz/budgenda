@@ -36,10 +36,15 @@ function openMeetingsModal() {
     allMeetingsModalContent.appendChild(noMeetings);
   } else {
     for (let key of meetingKeys) {
+      let datetime = simpleDatetime(key);
       // Append a p element containing the meeting's date.
       let dateP = document.createElement("p");
       //dateP.innerText = dateToTime(key);
-      dateP.innerText = key;
+      if (key == meetingStart) {
+        dateP.innerText = `${datetime} (Current meeting)`;
+      } else {
+        dateP.innerText = datetime;
+      }
       allMeetingsModalContent.appendChild(dateP);
     }
   }
