@@ -5,11 +5,11 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
     </head>
-    <body onload='startAgenda();'>
+    <body>
         <div class="main-container">
             <div class="sidebar">
                 <!-- Refresh the page so that we start a new ad hoc meeting. -->
-                <a href="#" title="Ad hoc" onclick="window.location.reload();">
+                <a href="#" title="Ad hoc" onclick="startAgenda();">
                     <span class="material-icons">bolt</span>
                 </a>
                 <!-- TODO: Start a presentation-/demo-type meeting. -->

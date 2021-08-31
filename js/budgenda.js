@@ -13,66 +13,77 @@ const width = 1200 - margin.left - margin.right,
 const width = 1200 - margin.left - margin.right,
       height = 200 - margin.top - margin.bottom;
 
+function buildTimeline() {
+  let contentParent = document.querySelector("body .main-container .content");
+  let existingTimeline = document.querySelector("svg"); // Only one, so far.
+  if (existingTimeline) {
+    contentParent.removeChild(existingTimeline);
+  }
 
-// TODO: Learn more about this.
-const svg = d3.select("body").select(".main-container").select(".content").append("svg")
-              .attr("class", "timeline")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-              .attr("transform", `translate(${margin.left},${margin.top})`);
-
-
-// Define the scale for our axis.
-let duration = 30;
-let start = Date.now() - (60 * 2 * 1000);
-let end = Date.now() + (60 * duration * 1000);
-let xScale = d3.scaleTime()
-               .domain([start, end])
-               .range([0, width]);
-
-// NOTE: axisBottom() doesn't place the axis at the bottom of a graph.
-// It creates an axis where _tick marks_ are on the bottom.
-let xAxisGenerator = d3.axisBottom(xScale);
-
-// Customizations using the axis generator; these are done pre-render.
-// Start and end on a nice boundary.
-// For a 30-minute session, starts and ends 1-6 minutes on each side.
-xAxisGenerator.ticks(duration);
-let timeFormat = d3.timeFormat("%H:%M"); // 24-hour format.
-xAxisGenerator.tickFormat(timeFormat);
-xScale.nice();
+  // Create an SVG of our timeline.
+  const svg = d3.select("body")
+                .select(".main-container")
+                .select(".content")
+                // Insert the SVG just above the help message.
+                .insert("svg", "#help-message")
+                .attr("class", "timeline")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
 
-// Render the axis.
-let xAxis = svg.append("g").call(xAxisGenerator);
+  // Define the scale for our axis.
+  let duration = 30;
+  let start = Date.now() - (60 * 2 * 1000);
+  let end = Date.now() + (60 * duration * 1000);
+  let xScale = d3.scaleTime()
+                 .domain([start, end])
+                 .range([0, width]);
 
-// Customizations using the axis after it is called
-// Place the axis at the bottom of the graph.
-xAxis.attr("transform",`translate(${0},${height})`);
+  // NOTE: axisBottom() doesn't place the axis at the bottom of a graph.
+  // It creates an axis where _tick marks_ are on the bottom.
+  let xAxisGenerator = d3.axisBottom(xScale);
 
-// Optional: Remove text from alternate ticks, for legibility.
-// https://stackoverflow.com/questions/38921226/show-every-other-tick-label-on-d3-time-axis
-/*
-let ticks = d3.selectAll(".tick text");
-ticks.each(function(_,i){
-  if(i%2 !== 0) d3.select(this).remove();
-});
-*/
+  // Customizations using the axis generator; these are done pre-render.
+  // Start and end on a nice boundary.
+  // For a 30-minute session, starts and ends 1-6 minutes on each side.
+  xAxisGenerator.ticks(duration);
+  let timeFormat = d3.timeFormat("%H:%M"); // 24-hour format.
+  xAxisGenerator.tickFormat(timeFormat);
+  xScale.nice();
 
-// Elongate alternate ticks, for legibility.
-d3.selectAll(".tick line")
-.each(function(datum, idx){
-  if(idx % 2 !== 0) d3.select(this)
-    .attr("y2", "16");
-});
 
-// We also need to push the placement of text to be under the tick line.
-let _text = d3.selectAll(".tick text");
-_text.each(function(_,i){
-  if(i%2 !== 0) d3.select(this)
-    .attr("y", "16");
-});
+  // Render the axis.
+  let xAxis = svg.append("g").call(xAxisGenerator);
+
+  // Customizations using the axis after it is called
+  // Place the axis at the bottom of the graph.
+  xAxis.attr("transform",`translate(${0},${height})`);
+
+  // Optional: Remove text from alternate ticks, for legibility.
+  // https://stackoverflow.com/questions/38921226/show-every-other-tick-label-on-d3-time-axis
+  /*
+  let ticks = d3.selectAll(".tick text");
+  ticks.each(function(_,i){
+    if(i%2 !== 0) d3.select(this).remove();
+  });
+  */
+
+  // Elongate alternate ticks, for legibility.
+  d3.selectAll(".tick line")
+  .each(function(datum, idx){
+    if(idx % 2 !== 0) d3.select(this)
+      .attr("y2", "16");
+  });
+
+  // We also need to push the placement of text to be under the tick line.
+  let _text = d3.selectAll(".tick text");
+  _text.each(function(_,i){
+    if(i%2 !== 0) d3.select(this)
+      .attr("y", "16");
+  });
+} // End buildTimeline()
 
 // Refresh it
 function refreshTicks() {
@@ -152,8 +163,19 @@ let allNotes = [];
 // in localStorage to maintain some state for the meeting.
 let meetingStart;
 
+// Clear any existing notes from the document so we can start fresh.
+function clearExistingNotes() {
+  let notesParent = document.querySelector("#notes");
+  let notes = document.querySelectorAll("#notes .note");
+  for (let note of notes) {
+    notesParent.removeChild(note);
+  }
+}
+
 // Get the agenda started by creating an initial note.
 function startAgenda() {
+  clearExistingNotes();
+  buildTimeline();
   let now = new Date();
   meetingStart = now;
   // Create very first note.
