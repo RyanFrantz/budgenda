@@ -83,6 +83,7 @@ function addNotesToElement(notes, parent) {
 // Populate the export modal with note details.
 function openExportModal() {
   clearModalContent();
+  storeNoteState(); // js/budgenda.js
   // Make the modal visible.
   modal.style.display = "block";
 
