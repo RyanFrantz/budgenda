@@ -1,7 +1,5 @@
 const copyButton = document.getElementById("copy-to-clipboard");
-/* Already declared in export.js.
 const modalContent = document.getElementById("modal-content");
-*/
 
 function copyExportedNotes() {
   window.getSelection().selectAllChildren(modalContent);

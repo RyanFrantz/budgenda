@@ -199,29 +199,12 @@ function epoch(date) {
 
 // Store the current state of all note content.
 function storeNoteState() {
-  let _allNotes = [];
-  let notes = d3.select("#notes").selectAll(".note");
-  for (let n of notes) {
-    // Get the element's id value.
-    let noteId = d3.select(n).attr('id');
-    let _epoch = Number(noteId.replace(/^note_/, ""));
-    // Select all details for this note.
-    let sel = `#${noteId} > .note-details > .note-detail`;
-    let details = d3.select(n).selectAll(sel);
-    // NOTE: I feel like I'm abusing D3 when I [c|sh]ould use basic getElement*
-    // functions. Or D3 is making it too easy for me to use with functions like
-    // d3.map().
-    // Store each detail's text in a list.
-    let noteContents = d3.map(details, d => {
-      return d3.select(d).text();
-    });
-    _allNotes.push({id: _epoch, details: noteContents});
-  }
-  // Replace the global array.
-  allNotes = _allNotes;
-  // Store an up-to-date copy in localStorage, keyed by the meeting's start date.
+  // from js/export.js
+  let exportedNotes = getNotesForExport();
   let allMeetings = JSON.parse(localStorage.getItem("budgenda")) || {}
-  allMeetings[meetingStart] = _allNotes;
+  allMeetings[meetingStart] = {
+    notes: exportedNotes
+  };
   localStorage.setItem("budgenda", JSON.stringify(allMeetings));
 }
 
