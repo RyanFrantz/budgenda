@@ -51,7 +51,7 @@ function dateFromNoteId(noteId) {
 function addNotesToElement(notes, parent) {
   for (let note of notes) {
     // Convert the HTML string into a fragment so we can access it as a Node.
-    let frag = document.createRange().createContextualFragment(note.body)
+    let frag = document.createRange().createContextualFragment(note.body);
     let noteId = frag.querySelector(".note").id;
     // Append a p element containing the note's date.
     let dateP = document.createElement("p");

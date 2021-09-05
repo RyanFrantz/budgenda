@@ -173,21 +173,37 @@ function clearExistingNotes() {
 
 const notesDiv = document.getElementById("notes");
 // Add an input box for the meeting title.
-function addTitleInput() {
+function addTitleInput(meetingTitle = null) {
   let title = document.createElement("input");
   title.setAttribute("id", "meeting-title");
   title.setAttribute("placeholder", "Meeting Title");
+  // In case we're populating content from an existing meeting.
+  if (meetingTitle) {
+    title.value = meetingTitle;
+  }
   notes.appendChild(title);
+}
+
+// Create a div whose id is the date of a given meeting.
+// We'll use this as a watermark to ensure we're saving content to the
+// proper meeting.
+function createMeetingWatermark(date) {
+  let watermark = document.createElement("div");
+  watermark.id = "watermark";
+  // Set a custom data-* attribute so we can look up the meeting's start date.
+  watermark.setAttribute("data-watermark", date);
+  notesDiv.appendChild(watermark);
 }
 
 // Get the agenda started by creating an initial note.
 function startAgenda() {
   clearExistingNotes();
+  let now = new Date();
+  meetingStart = now;
+  createMeetingWatermark(now);
   buildTimeline();
   addTitleInput();
   addExportButton(); // js/export.js
-  let now = new Date();
-  meetingStart = now;
   // Create very first note.
   createNote(now);
   // There should only be a single note detail at this point.
@@ -213,9 +229,16 @@ function storeNoteState() {
   let exportedNotes = getNotesForExport();
   let meetingTitle = document.getElementById("meeting-title")?.value || null;
   let allMeetings = JSON.parse(localStorage.getItem("budgenda")) || {}
+  let watermark;
+  let _meetingStart;
+  watermark = document.getElementById("watermark");
+  if (watermark) {
+    // Get the meeting's start from its watermark.
+    _meetingStart = watermark.dataset.watermark;
+  }
   // Only attempt to store if a meeting has started, else we have no notes.
-  if (meetingStart) {
-    allMeetings[meetingStart] = {
+  if (_meetingStart) {
+    allMeetings[_meetingStart] = {
       metadata: {
         title: meetingTitle
       },

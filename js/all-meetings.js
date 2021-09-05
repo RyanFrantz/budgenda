@@ -19,6 +19,31 @@ function clearMeetingsModalContent() {
   }
 }
 
+function fetchMeeting(meetingKey) {
+  let meetings = getMeetings();
+  return meetings[meetingKey];
+}
+
+// Given a meeting's key name, look up its contents in storage and
+// populate the page with it.
+function loadMeeting(meetingKey) {
+  allMeetingsModal.style.display = "none"; // Hide the modal where this started.
+  storeNoteState(); // In case there is an existing meeting.
+  clearExistingNotes();
+  let meeting = fetchMeeting(meetingKey);
+  meetingTitle = meeting.metadata?.title || meetingKey;
+  createMeetingWatermark(meetingKey); // js/budgenda.js
+  addTitleInput(meetingTitle);
+  addExportButton();
+  // Hyrdate the notes.
+  let notesParent = document.getElementById("notes");
+  for (let note of meeting.notes) {
+    let frag = document.createRange().createContextualFragment(note.body);
+    let noteId = frag.querySelector(".note").id;
+    notesParent.appendChild(frag);
+  }
+}
+
 // Populate the meetings modal with meetings summaries.
 function openMeetingsModal() {
   clearMeetingsModalContent();
@@ -47,12 +72,17 @@ function openMeetingsModal() {
       // Append a p element containing the meeting's full name.
       // This may be only a date.
       let meetingP = document.createElement("p");
-      //dateP.innerText = dateToTime(key);
+      let meetingLink = document.createElement("a");
+      meetingLink.href = "#";
       if (key == meetingStart) {
-        meetingP.innerText = `${meetingFullName} (Current meeting)`;
+        meetingLink.innerText = `${meetingFullName} (Current meeting)`;
       } else {
-        meetingP.innerText = meetingFullName;
+        meetingLink.innerText = meetingFullName;
       }
+      meetingLink.onclick = function() {
+        loadMeeting(key);
+      }
+      meetingP.appendChild(meetingLink);
       allMeetingsModalContent.appendChild(meetingP);
     }
   }
