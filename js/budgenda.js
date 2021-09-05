@@ -212,8 +212,12 @@ function epoch(date) {
 function storeNoteState() {
   // from js/export.js
   let exportedNotes = getNotesForExport();
+  let meetingTitle = document.getElementById("meeting-title").value;
   let allMeetings = JSON.parse(localStorage.getItem("budgenda")) || {}
   allMeetings[meetingStart] = {
+    metadata: {
+      title: meetingTitle
+    },
     notes: exportedNotes
   };
   localStorage.setItem("budgenda", JSON.stringify(allMeetings));

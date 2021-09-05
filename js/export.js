@@ -27,10 +27,6 @@ function getNotesForExport() {
     }
     notesToExport.push(_note);
   }
-  // TODO: Store the notes in localStorage at this point?
-  // It could be a handy supplement to saving the notes on each
-  // note creation.
-
   return notesToExport;
 }
 
