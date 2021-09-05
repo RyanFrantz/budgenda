@@ -41,6 +41,11 @@ function loadMeeting(meetingKey) {
     let frag = document.createRange().createContextualFragment(note.body);
     let noteId = frag.querySelector(".note").id;
     notesParent.appendChild(frag);
+    if (note.metadata.followup) {
+      // Check that box!
+      let checkbox = document.getElementById(`${noteId}_follow_up`);
+      checkbox.checked = true;
+    }
   }
 }
 
