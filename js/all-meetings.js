@@ -8,8 +8,7 @@ const clearMeetingsButton = document.getElementById("clear-meetings");
 // Retrieve meetings from storage.
 function getMeetings() {
   let meetings = JSON.parse(localStorage.getItem("budgenda")) || [];
-  // Return the keys of each stored meeting, which is a date string.
-  return Object.keys(meetings);
+  return meetings;
 }
 
 // Clear any existing modal content (e.g. from previous exports) so that we can
@@ -23,10 +22,13 @@ function clearMeetingsModalContent() {
 // Populate the meetings modal with meetings summaries.
 function openMeetingsModal() {
   clearMeetingsModalContent();
+  storeNoteState();
   // Make the modal visible.
   allMeetingsModal.style.display = "block";
 
-  let meetingKeys = getMeetings();
+  let meetings  = getMeetings();
+  // Get the keys of each stored meeting, which is a date string.
+  let meetingKeys = Object.keys(meetings);
   let meetingsTitle = document.createElement("h3");
   meetingsTitle.innerText = "Meetings";
   allMeetingsModalContent.appendChild(meetingsTitle);
@@ -37,15 +39,21 @@ function openMeetingsModal() {
   } else {
     for (let key of meetingKeys) {
       let datetime = simpleDatetime(key);
-      // Append a p element containing the meeting's date.
-      let dateP = document.createElement("p");
+      let meetingFullName = `${datetime}`;
+      let meetingTitle = meetings[key].metadata.title;
+      if (meetingTitle) {
+        meetingFullName = `${meetingFullName} ${meetingTitle}`;
+      }
+      // Append a p element containing the meeting's full name.
+      // This may be only a date.
+      let meetingP = document.createElement("p");
       //dateP.innerText = dateToTime(key);
       if (key == meetingStart) {
-        dateP.innerText = `${datetime} (Current meeting)`;
+        meetingP.innerText = `${meetingFullName} (Current meeting)`;
       } else {
-        dateP.innerText = datetime;
+        meetingP.innerText = meetingFullName;
       }
-      allMeetingsModalContent.appendChild(dateP);
+      allMeetingsModalContent.appendChild(meetingP);
     }
   }
 }

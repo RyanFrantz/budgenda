@@ -212,15 +212,18 @@ function epoch(date) {
 function storeNoteState() {
   // from js/export.js
   let exportedNotes = getNotesForExport();
-  let meetingTitle = document.getElementById("meeting-title").value;
+  let meetingTitle = document.getElementById("meeting-title")?.value || null;
   let allMeetings = JSON.parse(localStorage.getItem("budgenda")) || {}
-  allMeetings[meetingStart] = {
-    metadata: {
-      title: meetingTitle
-    },
-    notes: exportedNotes
-  };
-  localStorage.setItem("budgenda", JSON.stringify(allMeetings));
+  // Only attempt to store if a meeting has started, else we have no notes.
+  if (meetingStart) {
+    allMeetings[meetingStart] = {
+      metadata: {
+        title: meetingTitle
+      },
+      notes: exportedNotes
+    };
+    localStorage.setItem("budgenda", JSON.stringify(allMeetings));
+  }
 }
 
 /* Given an epoch value, search among existing notes to find which of them
