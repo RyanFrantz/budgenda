@@ -31,7 +31,6 @@
                 <div class="clock">
                     <span id="the_clock"></span>
                 </div>
-                <script src="js/budgenda.js"></script>
                 <div id="help-message">
                     <p>
                     Click the <span class="material-icons">bolt</span> in the sidebar, or press <code>Ctrl + a</code> to create a new ad hoc meeting.
@@ -41,9 +40,6 @@
                     <p>Need help? Press <code>Ctrl + /</code></p>
                 </div>
                 <div id="notes">
-                    <button id="export-notes">
-                        Export Notes
-                    </button>
                 </div>
                 <div id="export-notes-modal" class="modal">
                     <div class="modal-content-header">
@@ -99,6 +95,7 @@
         <!-- end main-container" -->
         </div>
         <!-- Load after the modal is added to the DOM. -->
+        <script src="js/budgenda.js"></script>
         <script src="js/export.js"></script>
         <script src="js/clipboard.js"></script>
         <script src="js/keyboard-shortcuts.js"></script>

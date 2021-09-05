@@ -187,3 +187,7 @@ svg {
 .modal-content-header a {
     color: black;
 }
+
+#export-notes {
+    float: right;
+}

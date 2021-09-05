@@ -172,10 +172,21 @@ function clearExistingNotes() {
   }
 }
 
+const notesDiv = document.getElementById("notes");
+// Add an input box for the meeting title.
+function addTitleInput() {
+  let title = document.createElement("input");
+  title.setAttribute("id", "meeting-title");
+  title.setAttribute("placeholder", "Meeting Title");
+  notes.appendChild(title);
+}
+
 // Get the agenda started by creating an initial note.
 function startAgenda() {
   clearExistingNotes();
   buildTimeline();
+  addTitleInput();
+  addExportButton(); // js/export.js
   let now = new Date();
   meetingStart = now;
   // Create very first note.

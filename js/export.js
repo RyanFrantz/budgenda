@@ -2,7 +2,6 @@
 const modal = document.getElementById("export-notes-modal");
 const exportFollowUp = document.getElementById("export-follow-up");
 const exportMeetingMinutes = document.getElementById("export-meeting-minutes");
-const exportNotesBtn = document.getElementById("export-notes");
 const modalClose = document.getElementsByClassName("modal-close")[0];
 
 // Collect and return the current set of notes, including a bit of metadata.
@@ -108,7 +107,14 @@ function openExportModal() {
 }
 
 // Handler for clicking "Export Notes".
-exportNotesBtn.onclick = openExportModal;
+function addExportButton() {
+  let button = document.createElement("button");
+  button.setAttribute("id", "export-notes");
+  button.innerText = "Export Notes";
+  button.onclick = openExportModal;
+  // notesDiv from js/budgenda.js
+  notesDiv.appendChild(button);
+}
 
 // If the modal close icon is clicked, make the modal invisible.
 modalClose.onclick = function() {
