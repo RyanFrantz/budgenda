@@ -166,9 +166,8 @@ let meetingStart;
 // Clear any existing notes from the document so we can start fresh.
 function clearExistingNotes() {
   let notesParent = document.querySelector("#notes");
-  let notes = document.querySelectorAll("#notes .note");
-  for (let note of notes) {
-    notesParent.removeChild(note);
+  while (notesParent.firstChild) {
+    notesParent.removeChild(notesParent.firstChild);
   }
 }
 
