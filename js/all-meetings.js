@@ -56,7 +56,7 @@ function openMeetingsModal() {
   // Make the modal visible.
   allMeetingsModal.style.display = "block";
 
-  let meetings  = getMeetings();
+  let meetings = getMeetings();
   // Get the keys of each stored meeting, which is a date string.
   let meetingKeys = Object.keys(meetings);
   let meetingsTitle = document.createElement("h3");
