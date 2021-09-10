@@ -330,17 +330,31 @@ function createNote(date) {
       .attr("id", `${noteId}`);
   }
 
+  // TODO: Consider moving these checkboxes into their own div to better
+  // manage/style them.
   let checkboxId = `${noteId}_follow_up`;
   newNote.append("input")
     .attr("type", "checkbox")
     .attr("id", checkboxId)
-    .attr("class", "note-follow-up")
+    .attr("class", "note-attribute")
     .attr("name", "follow-up");
 
   newNote.append("label")
     .attr("for", checkboxId)
-    .attr("class", "note-follow-up")
+    .attr("class", "note-attribute")
     .text("Follow-up");
+
+  let decisionCheckboxId = `${noteId}_decision`;
+  newNote.append("input")
+    .attr("type", "checkbox")
+    .attr("id", decisionCheckboxId)
+    .attr("class", "note-attribute")
+    .attr("name", "decision");
+
+  newNote.append("label")
+    .attr("for", decisionCheckboxId)
+    .attr("class", "note-attribute")
+    .text("Decision");
 
   // Create a div above all details that shows the time of the note.
   newNote.append("div")

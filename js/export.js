@@ -1,5 +1,6 @@
 // Largely lifted from https://www.w3schools.com/howto/howto_css_modals.asp
 const modal = document.getElementById("export-notes-modal");
+const exportDecisions = document.getElementById("export-decisions");
 const exportFollowUp = document.getElementById("export-follow-up");
 const exportMeetingMinutes = document.getElementById("export-meeting-minutes");
 const modalClose = document.getElementsByClassName("modal-close")[0];
@@ -13,17 +14,23 @@ function getNotesForExport() {
     let _note = {
       body: null,
       metadata: {
-        followup: false
+        followup: false,
+        decision: false
       }
     };
     _note.body = note.outerHTML;
     // Determine if the follow-up box is checked and add it to metadata.
     let followUpId = `#${noteId}_follow_up`;
+    let decisionId = `#${noteId}_decision`;
     let followUpBox = note.querySelector(followUpId);
+    let decisionBox = note.querySelector(decisionId);
     if (followUpBox.checked) {
       // Add the id to a list. These metadata can be used later when notes
       // are recalled, to mark them as checked.
       _note.metadata.followup = true;
+    }
+    if (decisionBox.checked) {
+      _note.metadata.decision = true;
     }
     notesToExport.push(_note);
   }
@@ -33,6 +40,9 @@ function getNotesForExport() {
 // Clear any existing modal content (e.g. from previous exports) so that we can
 // build it afresh from current notes.
 function clearModalContent() {
+  while (exportDecisions.hasChildNodes()) {
+    exportDecisions.removeChild(exportDecisions.firstChild);
+  }
   while (exportFollowUp.hasChildNodes()) {
     exportFollowUp.removeChild(exportFollowUp.firstChild);
   }
@@ -83,7 +93,19 @@ function openExportModal() {
   modal.style.display = "block";
 
   let exportedNotes = getNotesForExport();
+  let decisionNotes = exportedNotes.filter(note => note.metadata.decision);
   let followUpNotes = exportedNotes.filter(note => note.metadata.followup);
+
+  let decisionTitle = document.createElement("h3");
+  decisionTitle.innerText = "Decisions";
+  exportDecisions.appendChild(decisionTitle);
+  if (decisionNotes.length == 0) {
+    let noDecisions = document.createElement("p");
+    noDecisions.innerText = "No decisions were made.";
+    exportDecisions.appendChild(noDecisions);
+  } else {
+    addNotesToElement(decisionNotes, exportDecisions)
+  }
 
   let followUpTitle = document.createElement("h3");
   followUpTitle.innerText = "Follow-up";

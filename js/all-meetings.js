@@ -46,6 +46,10 @@ function loadMeeting(meetingKey) {
       let checkbox = document.getElementById(`${noteId}_follow_up`);
       checkbox.checked = true;
     }
+    if (note.metadata.decision) {
+      let checkbox = document.getElementById(`${noteId}_decision`);
+      checkbox.checked = true;
+    }
   }
 }
 
