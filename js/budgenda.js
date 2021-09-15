@@ -202,6 +202,7 @@ function startAgenda() {
   meetingStart = now;
   createMeetingWatermark(now);
   buildTimeline();
+  registerClickHandlers(); // js/handlers.js
   addTitleInput();
   addExportButton(); // js/export.js
   // Create very first note.
@@ -382,28 +383,6 @@ function createNote(date) {
   // Push the new note into our list of notes.
   allNotes.push({id: _epoch, details: []});
 }
-
-// Create a new note when a tick is clicked.
-function tickOnClick(_event, datum) {
-  // datum here is a Date string.
-  if (!allNotes.find(n => n.id == epoch(datum))) {
-    createNote(datum);
-  }
-
-  // We have a click event registered on a parent that we don't
-  // want to fire.
-  _event.stopPropagation();
-}
-
-// Select all tick text elements and bind events to them.
-d3.selectAll(".tick").on("click", tickOnClick);
-
-function timelineOnClick(_event, datum) {
-  let date = new Date();
-  createNote(date);
-}
-
-d3.selectAll(".timeline").on("click", timelineOnClick);
 
 /* Set the cursor so it visibly flashes and allows the user to start typing. */
 function setCursor(_event, datum) {
